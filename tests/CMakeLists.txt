@@ -8,7 +8,7 @@ foreach(src ${tst_SOURCES})
   get_filename_component(bin_name ${src} NAME_WE)
   add_executable(${bin_name} ${src})
   qt5_use_modules(${bin_name} Core Test Widgets)
-  target_link_libraries(${bin_name} dirtyPDFCore)
+  target_link_libraries(${bin_name} dirtyPDFCore poppler-qt5)
   add_test(${bin_name} ${bin_name})
 
   # Autorun
