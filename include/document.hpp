@@ -9,8 +9,10 @@
 
 namespace DirtyPDFCore{
   class Document : Poppler::Document{
-  private:
+  public:
     typedef unsigned int Id;
+    
+  private:
     Id m_id;
     static Id count;
 

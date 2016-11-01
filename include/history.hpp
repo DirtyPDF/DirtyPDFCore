@@ -8,20 +8,26 @@
 
 #include <QObject>
 #include <QUndoGroup>
+#include <QUndoStack>
+#include <QHash>
+#include "document.hpp"
 
 
 
 namespace DirtyPDFCore{
 
   /**
-   * @brief Singleton class derivated from QUndoGroup witch manages all the undo/redo
+   * @brief Singleton class derivated from QUndoGroup which manages all the undo/redo
    * actions across the entire system.
+   * Stores one QUndoStack for each @e Document opened.
+   * @see Document
    */
   class History : public QUndoGroup{
     Q_OBJECT
 
   private:
     static History* m_instance; ///< Instance pointer
+    QHash<Document::Id, QUndoStack*> m_undoStacks; ///< QUndoStacks stored by its document.
 
   protected:
     History(QObject* parent=Q_NULLPTR);
@@ -30,6 +36,26 @@ namespace DirtyPDFCore{
 
   public:
     static History* Instance();
+
+  public slots:
+
+    /**
+     * @brief Add an UndoStack for the document refered by documentId.
+     * @param documentId Id of the document for which the UndoStack is added.
+     */
+    void addDocumentStack(Document::Id documentId);
+
+    /**
+     * @brief Active the UndoStack bound to the document.
+     * @param documentId References the document bound to the UndoStack to activate.
+     */
+    void setActiveDocumentStack(Document::Id documentId);
+
+    /**
+     * @brief Remove the UndoStack bound to the document.
+     * @param documentId References the document bound to the UndoStack to remove.
+     */
+    void removeDocumentStack(Document::Id documentId);
   };
 }
 #endif
