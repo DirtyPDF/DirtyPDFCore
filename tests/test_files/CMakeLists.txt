@@ -1,0 +1,2 @@
+file(GLOB tst_FILES "*.pdf")
+file(COPY ${tst_FILES} DESTINATION ${CMAKE_CURRENT_BINARY_DIR})

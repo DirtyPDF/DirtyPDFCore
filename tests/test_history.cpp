@@ -12,7 +12,7 @@ class TestHistory : public QObject{
 private slots:
 
   void init();
-  void cleanUp();
+  void cleanup();
 
 };
 
@@ -22,7 +22,7 @@ void TestHistory::init(){
 }
 
 
-void TestHistory::cleanUp(){
+void TestHistory::cleanup(){
   delete m_history;
 }
 

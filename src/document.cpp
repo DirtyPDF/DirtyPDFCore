@@ -3,11 +3,14 @@ using namespace DirtyPDFCore;
 
 
 
+Document::Id Document::invalidId = 0;
+
+
 Document::Id Document::count = 0;
 
 
-Document* Document::load(const QString &filePath, const QByteArray &ownerPassword, const QByteArray &userPassword){
-  Document* doc = (Document*) Poppler::Document::load(filePath, ownerPassword, userPassword);
+Document* Document::load(const QUrl &docUrl, const QByteArray &ownerPassword, const QByteArray &userPassword){
+  Document* doc = (Document*) Poppler::Document::load(docUrl.path(), ownerPassword, userPassword);
   initializeId(doc);
   return doc;
 }
@@ -22,8 +25,8 @@ Document* Document::loadFromData(const QByteArray &fileContents, const QByteArra
 
 void Document::initializeId(Document* doc){
   if (doc != NULL){
-    doc->m_id = count;
     count++;
+    doc->m_id = count;
   }
 }
 

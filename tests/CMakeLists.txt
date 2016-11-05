@@ -1,8 +1,11 @@
+add_subdirectory(test_files)
 file(GLOB tst_SOURCES "test_*.cpp")
 file(GLOB tst_HEADERS "${HEADERS_DIR}/*.hpp")
 
 include_directories(${HEADERS_DIR})
 add_definitions(-Dprivate=public)
+add_definitions(-DTESTFILES="${CMAKE_CURRENT_BINARY_DIR}/test_files")
+set(CMAKE_BUILD_TYPE Debug)
 
 foreach(src ${tst_SOURCES})
   get_filename_component(bin_name ${src} NAME_WE)
