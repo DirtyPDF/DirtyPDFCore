@@ -9,6 +9,11 @@ History* History::m_instance = 0;
 History::History(QObject* parent) : QUndoGroup(parent){}
 
 
+History::~History(){
+  m_instance = 0;
+}
+
+
 History* History::Instance(){
   if (m_instance == 0)
     m_instance = new History;

@@ -37,6 +37,8 @@ namespace DirtyPDFCore{
   public:
     static History* Instance();
 
+    ~History();
+
   public slots:
 
     /**
