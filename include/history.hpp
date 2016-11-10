@@ -58,6 +58,14 @@ namespace DirtyPDFCore{
      * @param documentId References the document bound to the UndoStack to remove.
      */
     void removeDocumentStack(Document::Id documentId);
+
+  private slots:
+
+    /**
+     * @brief Active the UndoStack bound to the current document in DocumentsManager.
+     */
+    void activeCurrentDocumentStack();
+
   };
 }
 #endif

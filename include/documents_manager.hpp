@@ -19,7 +19,7 @@ namespace DirtyPDFCore{
    * actions across the entire system.
    * @see Document
    */
-  class DocumentsManager : QObject{
+  class DocumentsManager : public QObject{
     Q_OBJECT
 
   private:

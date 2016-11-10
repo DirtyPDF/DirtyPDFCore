@@ -9,7 +9,7 @@
 
 
 namespace DirtyPDFCore{
-  class Document : Poppler::Document{
+  class Document : public Poppler::Document{
   public:
     typedef unsigned int Id;
     static Id invalidId;

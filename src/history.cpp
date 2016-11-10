@@ -1,4 +1,5 @@
 #include "history.hpp"
+#include "documents_manager.hpp"
 using namespace DirtyPDFCore;
 
 
@@ -6,7 +7,12 @@ using namespace DirtyPDFCore;
 History* History::m_instance = 0;
 
 
-History::History(QObject* parent) : QUndoGroup(parent){}
+History::History(QObject* parent) : QUndoGroup(parent){
+  DocumentsManager* doc_manager = DocumentsManager::Instance();
+  connect(doc_manager, SIGNAL(documentOpened(Document::Id)), this, SLOT(addDocumentStack(Document::Id)));
+  connect(doc_manager, SIGNAL(currentDocumentChanged(Document::Id)), this, SLOT(activeCurrentDocumentStack()));
+  connect(doc_manager, SIGNAL(documentClosed(Document::Id)), this, SLOT(removeDocumentStack(Document::Id)));
+}
 
 
 History::~History(){
@@ -40,4 +46,10 @@ void History::setActiveDocumentStack(Document::Id documentId){
 void History::removeDocumentStack(Document::Id documentId){
   QUndoGroup::removeStack(m_undoStacks[documentId]);
   m_undoStacks.remove(documentId);
+}
+
+
+void History::activeCurrentDocumentStack(){
+  DocumentsManager* doc_manager = DocumentsManager::Instance();
+  setActiveDocumentStack(doc_manager->getCurrentDocument());
 }
