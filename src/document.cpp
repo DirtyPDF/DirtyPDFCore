@@ -34,3 +34,13 @@ void Document::initializeId(Document* doc){
 Document::Id Document::getId(){
   return m_id;
 }
+
+
+AnnotablePage* Document::page(int index) const{
+  return (AnnotablePage*)Poppler::Document::page(index);
+}
+
+
+AnnotablePage* Document::page(const QString &label) const{
+  return (AnnotablePage*)Poppler::Document::page(label);
+}

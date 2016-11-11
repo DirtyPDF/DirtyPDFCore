@@ -5,6 +5,7 @@
 #include <QString>
 #include <QByteArray>
 #include <QUrl>
+#include "annotable_page.hpp"
 
 
 
@@ -27,6 +28,10 @@ namespace DirtyPDFCore{
                                   &ownerPassword=QByteArray(), const QByteArray
                                   &userPassword=QByteArray());
     Id getId();
+
+    AnnotablePage* page(int index) const;
+
+    AnnotablePage* page(const QString &label) const;
   };
 }
 #endif
