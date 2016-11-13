@@ -1,9 +1,81 @@
+/**
+ * @file tools_manager.hpp
+ * @brief Header file for the class ToolsManager
+ */
+
 #ifndef _DPDFC_TOOLS_MANAGER_H_
 #define _DPDFC_TOOLS_MANAGER_H_
+namespace DirtyPDFCore{class ToolsManager;}
+
+#include <QObject>
+#include <QMouseEvent>
+#include "tool.hpp"
+#include "annotable_page.hpp"
 
 
 
 namespace DirtyPDFCore{
-  class ToolsManager;
+
+  /**
+   * @brief Singleton class which controls the selection and use of tools.
+   * @see Tool
+   */
+  class ToolsManager : public QObject{
+    Q_OBJECT
+
+  private:
+    static ToolsManager* m_instance; ///< Singleton instance
+    Tool* m_currentTool; ///< Tool currently selected
+    Tool* m_oldTool; ///< Tool selected before m_currentTool
+
+  protected:
+    ToolsManager(QObject* parent=Q_NULLPTR);
+    ToolsManager(const ToolsManager&);
+    void operator=(const ToolsManager&);
+
+  public:
+    ~ToolsManager();
+
+    static ToolsManager* Instance();
+
+    /**
+     * @brief Return the Tool currently selected in the system
+     */
+    Tool& getCurrentTool();
+
+    /**
+     * @brief Sets the Tool currently selected in the system.
+     * @param tool Concrete Tool subclass to set as the current tool.
+     * @remarks The class in the template and the class passed by parameter
+     * must be the same.
+     */
+    template <class ConcreteTool>
+    void setCurrentTool(const Tool &tool){
+      delete m_oldTool;
+      m_oldTool = m_currentTool;
+      m_currentTool = new ConcreteTool(tool);
+      emit currentToolChanged(*m_oldTool);
+    }
+
+  public slots:
+
+    /**
+     * @brief Uses the current Tool to write an annotation in a AnnotablePage depending
+     * on a QMouseEvent.
+     * @param page AnnotablePage in which write the annotation.
+     * @param mouseEvent QMouseEvent which tells how to write the annotation.
+     */
+    void useTool(const AnnotablePage* page, const QMouseEvent &mouseEvent);
+
+  signals:
+
+    /**
+     * @brief Signal emmited when the current Tool changes.
+     * @param oldTool The previous current Tool.
+     */
+    void currentToolChanged(Tool &oldTool);
+
+  };
 }
+
 #endif
