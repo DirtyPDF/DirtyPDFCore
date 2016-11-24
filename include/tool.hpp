@@ -5,6 +5,7 @@
 
 #ifndef _DPDFC_TOOL_H_
 #define _DPDFC_TOOL_H_
+namespace DirtyPDFCore{class Tool;}
 
 #include <QMouseEvent>
 #include "annotable_page.hpp"
