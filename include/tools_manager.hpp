@@ -9,6 +9,7 @@ namespace DirtyPDFCore{class ToolsManager;}
 
 #include <QObject>
 #include <QMouseEvent>
+#include <memory>
 #include "tool.hpp"
 #include "annotable_page.hpp"
 
@@ -25,8 +26,8 @@ namespace DirtyPDFCore{
 
   private:
     static ToolsManager* m_instance; ///< Singleton instance
-    Tool* m_currentTool; ///< Tool currently selected
-    Tool* m_oldTool; ///< Tool selected before m_currentTool
+    std::shared_ptr<Tool> m_currentTool; ///< Tool currently selected
+    std::shared_ptr<Tool> m_oldTool; ///< Tool selected before m_currentTool
 
   protected:
     ToolsManager(QObject* parent=Q_NULLPTR);
@@ -46,16 +47,8 @@ namespace DirtyPDFCore{
     /**
      * @brief Sets the Tool currently selected in the system.
      * @param tool Concrete Tool subclass to set as the current tool.
-     * @remarks The class in the template and the class passed by parameter
-     * must be the same.
      */
-    template <class ConcreteTool>
-    void setCurrentTool(const Tool &tool){
-      delete m_oldTool;
-      m_oldTool = m_currentTool;
-      m_currentTool = new ConcreteTool(tool);
-      emit currentToolChanged(*m_oldTool);
-    }
+    void setCurrentTool(const Tool &tool);
 
   public slots:
 

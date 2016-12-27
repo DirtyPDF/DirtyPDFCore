@@ -8,6 +8,7 @@
 namespace DirtyPDFCore{class Tool;}
 
 #include <QMouseEvent>
+#include <memory>
 #include "annotable_page.hpp"
 
 
@@ -25,7 +26,12 @@ namespace DirtyPDFCore{
      * @param page AnnotablePage to change with the Tool.
      * @param mouseEvent QMouseEvent indicating how the Tool has to modify the page.
      */
-    virtual void behavior(const AnnotablePage* page, const QMouseEvent &mouseEvent) = 0;
+    virtual void behavior(const AnnotablePage* page, const QMouseEvent &mouseEvent) const = 0;
+
+    /**
+     * @brief Returns a copy of the Tool.
+     */
+    virtual std::shared_ptr<Tool> clone() const = 0;
   };
 }
 #endif
