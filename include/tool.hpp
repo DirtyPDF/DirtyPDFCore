@@ -31,7 +31,21 @@ namespace DirtyPDFCore{
     /**
      * @brief Returns a copy of the Tool.
      */
-    virtual std::shared_ptr<Tool> clone() const = 0;
+    virtual std::shared_ptr<Tool> clone() const;
+  };
+
+
+  /**
+   * @brief Common interface for all tools with automatic clone.
+   */
+  template<typename DerivedTool>
+  class ToolCRTP : public Tool{
+    /**
+     * @brief Returns a copy of the Tool using the CRTP pattern.
+     */
+    std::shared_ptr<Tool> clone() const{
+      return std::shared_ptr<Tool>((Tool*) new DerivedTool(*this));
+    }
   };
 }
 #endif
