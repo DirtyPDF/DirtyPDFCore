@@ -58,7 +58,7 @@ namespace DirtyPDFCore{
      * @param page AnnotablePage in which write the annotation.
      * @param mouseEvent QMouseEvent which tells how to write the annotation.
      */
-    void useTool(const AnnotablePage* page, const QMouseEvent &mouseEvent);
+    void useTool(AnnotablePage* page, const QMouseEvent &mouseEvent);
 
   signals:
 

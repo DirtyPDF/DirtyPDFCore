@@ -26,7 +26,7 @@ namespace DirtyPDFCore{
      * @param page AnnotablePage to change with the Tool.
      * @param mouseEvent QMouseEvent indicating how the Tool has to modify the page.
      */
-    virtual void behavior(const AnnotablePage* page, const QMouseEvent &mouseEvent) const = 0;
+    virtual void behavior(AnnotablePage* page, const QMouseEvent &mouseEvent) = 0;
 
     /**
      * @brief Returns a copy of the Tool.
@@ -44,7 +44,7 @@ namespace DirtyPDFCore{
      * @brief Returns a copy of the Tool using the CRTP pattern.
      */
     std::shared_ptr<Tool> clone() const{
-      return std::shared_ptr<Tool>((Tool*) new DerivedTool(*this));
+      return std::shared_ptr<Tool>((Tool*) new DerivedTool(*((DerivedTool*)this)));
     }
   };
 }
