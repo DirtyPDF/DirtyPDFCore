@@ -20,6 +20,7 @@ namespace DirtyPDFCore{
    */
   class Tool{
   public:
+    virtual ~Tool(){};
 
     /**
      * @breif Describes the behavior of the Tool when a QMouseEvent is triggered inside an AnnotablePage.
@@ -31,15 +32,16 @@ namespace DirtyPDFCore{
     /**
      * @brief Returns a copy of the Tool.
      */
-    virtual std::shared_ptr<Tool> clone() const;
+    virtual std::shared_ptr<Tool> clone() const = 0;
   };
-
 
   /**
    * @brief Common interface for all tools with automatic clone.
    */
   template<typename DerivedTool>
   class ToolCRTP : public Tool{
+  public:
+
     /**
      * @brief Returns a copy of the Tool using the CRTP pattern.
      */

@@ -1,7 +1,7 @@
 project(DirtyPDFCore)
 cmake_minimum_required(VERSION 3.5)
 
-set(HEADERS_DIR ${CMAKE_SOURCE_DIR}/include)
+set(HEADERS_DIR ${CMAKE_CURRENT_SOURCE_DIR}/include)
 
 find_package(Qt5Core REQUIRED)
 find_package(Qt5Gui REQUIRED)

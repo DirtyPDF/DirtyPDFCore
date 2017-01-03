@@ -27,6 +27,11 @@ DocumentsManager::~DocumentsManager(){
 }
 
 
+int DocumentsManager::getDocumentsNumber(){
+  return m_openedDocuments.size();
+}
+
+
 Document::Id DocumentsManager::getCurrentDocument(){
   return m_currentDocumentId;
 }

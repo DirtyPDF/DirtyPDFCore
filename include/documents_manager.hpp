@@ -58,6 +58,8 @@ namespace DirtyPDFCore{
      */
     Document* getDocumentById(Document::Id documentId);
 
+    int getDocumentsNumber();
+
   public slots:
 
     /**
