@@ -27,7 +27,7 @@ namespace DirtyPDFCore{
 
   private:
     static History* m_instance; ///< Instance pointer
-    QHash<Document::Id, QUndoStack*> m_undoStacks; ///< QUndoStacks stored by its document.
+    QHash<DocumentId, QUndoStack*> m_undoStacks; ///< QUndoStacks stored by its document.
 
   protected:
     History(QObject* parent=Q_NULLPTR);
@@ -45,19 +45,19 @@ namespace DirtyPDFCore{
      * @brief Add an UndoStack for the document refered by documentId.
      * @param documentId Id of the document for which the UndoStack is added.
      */
-    void addDocumentStack(Document::Id documentId);
+    void addDocumentStack(DocumentId documentId);
 
     /**
      * @brief Active the UndoStack bound to the document.
      * @param documentId References the document bound to the UndoStack to activate.
      */
-    void setActiveDocumentStack(Document::Id documentId);
+    void setActiveDocumentStack(DocumentId documentId);
 
     /**
      * @brief Remove the UndoStack bound to the document.
      * @param documentId References the document bound to the UndoStack to remove.
      */
-    void removeDocumentStack(Document::Id documentId);
+    void removeDocumentStack(DocumentId documentId);
 
   private slots:
 

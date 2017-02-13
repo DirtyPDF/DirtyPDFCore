@@ -19,7 +19,7 @@ InkPenTool::InkPenTool(const InkPenTool &inkPenTool){
 }
 
 
-void InkPenTool::behavior(AnnotablePage* page, const QMouseEvent &mouseEvent){
+void InkPenTool::behavior(Page* page, const QMouseEvent &mouseEvent){
   if (mouseEvent.type() == QEvent::MouseButtonPress && mouseEvent.button() == Qt::LeftButton){
     QList<QLinkedList<QPointF> > paths;
     paths.append(QLinkedList<QPointF>());

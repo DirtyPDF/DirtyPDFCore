@@ -10,8 +10,8 @@ namespace DirtyPDFCore{class ToolsManager;}
 #include <QObject>
 #include <QMouseEvent>
 #include <memory>
+#include "page.hpp"
 #include "tool.hpp"
-#include "annotable_page.hpp"
 
 
 
@@ -53,12 +53,12 @@ namespace DirtyPDFCore{
   public slots:
 
     /**
-     * @brief Uses the current Tool to write an annotation in a AnnotablePage depending
+     * @brief Uses the current Tool to write an annotation in a Page depending
      * on a QMouseEvent.
-     * @param page AnnotablePage in which write the annotation.
+     * @param page Page in which write the annotation.
      * @param mouseEvent QMouseEvent which tells how to write the annotation.
      */
-    void useTool(AnnotablePage* page, const QMouseEvent &mouseEvent);
+    void useTool(Page* page, const QMouseEvent &mouseEvent);
 
   signals:
 

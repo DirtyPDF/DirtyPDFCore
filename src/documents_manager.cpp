@@ -7,7 +7,14 @@ DocumentsManager* DocumentsManager::m_instance = 0;
 
 
 DocumentsManager::DocumentsManager(){
-  m_currentDocumentId = Document::invalidId;
+  m_currentDocumentId = INVALID_DOCUMENT_ID;
+}
+
+
+DocumentId DocumentsManager::generateNewId(){
+  static DocumentId lastId = 0;
+  lastId++;
+  return lastId;
 }
 
 
@@ -20,7 +27,7 @@ DocumentsManager* DocumentsManager::Instance(){
 
 
 DocumentsManager::~DocumentsManager(){
-  QHash<Document::Id, Document*>::iterator it;
+  QHash<DocumentId, Document*>::iterator it;
   for (it=m_openedDocuments.begin(); it != m_openedDocuments.end(); ++it)
     delete it.value();
   m_instance = 0;
@@ -32,47 +39,48 @@ int DocumentsManager::getDocumentsNumber(){
 }
 
 
-Document::Id DocumentsManager::getCurrentDocument(){
+DocumentId DocumentsManager::getCurrentDocument(){
   return m_currentDocumentId;
 }
 
 
-QList<Document::Id> DocumentsManager::getOpenedDocuments(){
+QList<DocumentId> DocumentsManager::getOpenedDocuments(){
   return m_openedDocuments.keys();
 }
 
 
-Document* DocumentsManager::getDocumentById(Document::Id documentId){
-  if (documentId == Document::invalidId || !m_openedDocuments.contains(documentId))
+Document* DocumentsManager::getDocumentById(DocumentId documentId){
+  if (documentId == INVALID_DOCUMENT_ID || !m_openedDocuments.contains(documentId))
     return NULL;
   return m_openedDocuments[documentId];
 }
 
 
-Document::Id DocumentsManager::openDocument(const QUrl &docUrl){
-  Document* doc = Document::load(docUrl);
+DocumentId DocumentsManager::openDocument(const QUrl &docUrl){
+  Document* doc = Document::load(docUrl.toString());
   if (doc == NULL)
-    return Document::invalidId;
+    return INVALID_DOCUMENT_ID;
 
-  m_openedDocuments[doc->getId()] = doc;
-  emit documentOpened(doc->getId());
-  return doc->getId();
+  DocumentId documentId = generateNewId();
+  m_openedDocuments[documentId] = doc;
+  emit documentOpened(documentId);
+  return documentId;
 }
 
 
-void DocumentsManager::closeDocument(const Document::Id documentId){
+void DocumentsManager::closeDocument(const DocumentId documentId){
   if (m_openedDocuments.contains(documentId)){
     delete m_openedDocuments[documentId];
     m_openedDocuments.remove(documentId);
-    m_currentDocumentId = Document::invalidId;
+    m_currentDocumentId = INVALID_DOCUMENT_ID;
     emit documentClosed(documentId);
   }
 }
 
 
-void DocumentsManager::setCurrentDocument(const Document::Id documentId){
+void DocumentsManager::setCurrentDocument(const DocumentId documentId){
   if (m_openedDocuments.contains(documentId)){
-    Document::Id old = m_currentDocumentId;
+    DocumentId old = m_currentDocumentId;
     m_currentDocumentId = documentId;
     emit currentDocumentChanged(old);
   }

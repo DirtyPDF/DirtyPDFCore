@@ -9,7 +9,7 @@ namespace DirtyPDFCore{class Tool;}
 
 #include <QMouseEvent>
 #include <memory>
-#include "annotable_page.hpp"
+#include "page.hpp"
 
 
 
@@ -23,11 +23,11 @@ namespace DirtyPDFCore{
     virtual ~Tool(){};
 
     /**
-     * @breif Describes the behavior of the Tool when a QMouseEvent is triggered inside an AnnotablePage.
-     * @param page AnnotablePage to change with the Tool.
+     * @breif Describes the behavior of the Tool when a QMouseEvent is triggered inside a Page.
+     * @param page Page to change with the Tool.
      * @param mouseEvent QMouseEvent indicating how the Tool has to modify the page.
      */
-    virtual void behavior(AnnotablePage* page, const QMouseEvent &mouseEvent) = 0;
+    virtual void behavior(Page* page, const QMouseEvent &mouseEvent) = 0;
 
     /**
      * @brief Returns a copy of the Tool.

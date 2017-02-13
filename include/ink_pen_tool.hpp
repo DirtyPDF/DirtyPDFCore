@@ -21,7 +21,7 @@ namespace DirtyPDFCore{
 
     InkPenTool(const InkPenTool &inkPenTool);
 
-    void behavior(AnnotablePage* page, const QMouseEvent &mouseEvent);
+    void behavior(Page* page, const QMouseEvent &mouseEvent);
   };
 }
 #endif

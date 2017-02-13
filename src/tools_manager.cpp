@@ -36,6 +36,8 @@ Tool& ToolsManager::getCurrentTool(){
 }
 
 
-void ToolsManager::useTool(AnnotablePage* page, const QMouseEvent &mouseEvent){
+void ToolsManager::useTool(Page* page, const QMouseEvent &mouseEvent){
+  if (m_currentTool == 0)
+    return;
   m_currentTool->behavior(page, mouseEvent);
 }

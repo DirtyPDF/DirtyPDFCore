@@ -1,37 +1,31 @@
-#ifndef _DPDFC_DOCUMENT_H
-#define _DPDFC_DOCUMENT_H
+/**
+ * @file document.hpp
+ * @brief Header file for the class Document
+ */
+
+#ifndef _DPDFC_DOCUMENT_H_
+#define _DPDFC_DOCUMENT_H_
 
 #include <poppler-qt5.h>
-#include <QString>
-#include <QByteArray>
-#include <QUrl>
-#include "annotable_page.hpp"
 
 
 
 namespace DirtyPDFCore{
-  class Document : public Poppler::Document{
-  public:
-    typedef unsigned int Id;
-    static Id invalidId;
+  /**
+   * @brief A renaming for Poppler::Document class in order to ease a redefinition
+   * in a future.
+   */
+  typedef Poppler::Document Document;
 
-  private:
-    Id m_id;
-    static Id count;
+  /**
+   * @brief Type to identify documents.
+   */
+  typedef unsigned int DocumentId;
 
-    static void initializeId(Document* document);
-
-  public:
-    static Document* load(const QUrl &docUrl, const QByteArray &ownerPassword=QByteArray(),
-                          const QByteArray &userPassword=QByteArray());
-    static Document* loadFromData(const QByteArray &fileContents, const QByteArray
-                                  &ownerPassword=QByteArray(), const QByteArray
-                                  &userPassword=QByteArray());
-    Id getId();
-
-    AnnotablePage* page(int index) const;
-
-    AnnotablePage* page(const QString &label) const;
-  };
+  /**
+   * @brief Representation of an invalid document via its id.
+   */
+  const DocumentId INVALID_DOCUMENT_ID = 0;
 }
+
 #endif

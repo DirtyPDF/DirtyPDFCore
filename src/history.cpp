@@ -9,9 +9,9 @@ History* History::m_instance = 0;
 
 History::History(QObject* parent) : QUndoGroup(parent){
   DocumentsManager* doc_manager = DocumentsManager::Instance();
-  connect(doc_manager, SIGNAL(documentOpened(Document::Id)), this, SLOT(addDocumentStack(Document::Id)));
-  connect(doc_manager, SIGNAL(currentDocumentChanged(Document::Id)), this, SLOT(activeCurrentDocumentStack()));
-  connect(doc_manager, SIGNAL(documentClosed(Document::Id)), this, SLOT(removeDocumentStack(Document::Id)));
+  connect(doc_manager, SIGNAL(documentOpened(DocumentId)), this, SLOT(addDocumentStack(DocumentId)));
+  connect(doc_manager, SIGNAL(currentDocumentChanged(DocumentId)), this, SLOT(activeCurrentDocumentStack()));
+  connect(doc_manager, SIGNAL(documentClosed(DocumentId)), this, SLOT(removeDocumentStack(DocumentId)));
 }
 
 
@@ -28,7 +28,7 @@ History* History::Instance(){
 }
 
 
-void History::addDocumentStack(Document::Id documentId){
+void History::addDocumentStack(DocumentId documentId){
   if (m_undoStacks.contains(documentId))
     QUndoGroup::removeStack(m_undoStacks[documentId]);
 
@@ -38,12 +38,12 @@ void History::addDocumentStack(Document::Id documentId){
 }
 
 
-void History::setActiveDocumentStack(Document::Id documentId){
+void History::setActiveDocumentStack(DocumentId documentId){
   QUndoGroup::setActiveStack(m_undoStacks[documentId]);
 }
 
 
-void History::removeDocumentStack(Document::Id documentId){
+void History::removeDocumentStack(DocumentId documentId){
   QUndoGroup::removeStack(m_undoStacks[documentId]);
   m_undoStacks.remove(documentId);
 }
