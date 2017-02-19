@@ -15,20 +15,47 @@ namespace DirtyPDFCore{
     /**
      * @brief Parent class for all Tools related with the draw or erase of strokes in the page.
      */
-    class PenTool : public Tool{
-    protected:
+    template<typename DerivedPenTool>
+    class PenTool : public ToolCRTP<DerivedPenTool>{
+    private:
       QColor m_color; ///< Color selected for the stroke
-      double m_width; ///< Witdth selected for the stroke
-      bool m_beautifySelected; ///< Tells if the beautification option is selected or not
+      double m_width; ///< Width selected for the stroke
 
     public:
-      PenTool();
+      PenTool(){
+        setColor(QColor(235, 99, 98));
+        setWidth(5);
+      }
 
       /**
-       * @brief Initializes the pen with the values that it needs to perform its behavior.
-       * This function is called by the PensManager when it needs to create a new instance of a PenTool subclass.
+       * @brief Sets the color of the pen.
+       * @param color Color of the pen.
        */
-      void initialize(const QColor &color, double width, bool beautifySelected);
+      void setColor(const QColor &color){
+        m_color = color;
+      }
+
+      /**
+       * @brief Returns the color of the pen.
+       */
+      const QColor& color() const{
+        return m_color;
+      }
+
+      /**
+       * @brief Sets the width of the pen
+       * @param width Width of the pen
+       */
+      void setWidth(double width){
+          m_width = width;
+      }
+
+      /**
+       * @brief Returns the width of the pen.
+       */
+      double width() const{
+        return m_width;
+      }
     };
 }
 
