@@ -6,13 +6,13 @@
 #ifndef _DPDFC_INK_PEN_TOOL_H_
 #define _DPDFC_INK_PEN_TOOL_H_
 
-#include <poppler-qt5.h>
-#include "tool.hpp"
+#include "page.hpp"
+#include "pen_tool.hpp"
 
 
 
 namespace DirtyPDFCore{
-  class InkPenTool : public ToolCRTP<InkPenTool>{
+  class InkPenTool : public PenTool<InkPenTool>{
   private:
     Poppler::InkAnnotation* m_annotation;
 
