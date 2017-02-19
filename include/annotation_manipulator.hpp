@@ -97,4 +97,6 @@ namespace DirtyPDFCore{
   };
 }
 
+
+#include "ink_annotation_manipulator.hpp"
 #endif
