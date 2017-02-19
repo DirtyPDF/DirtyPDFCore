@@ -30,6 +30,12 @@ namespace DirtyPDFCore{
     virtual void behavior(Page* page, const QMouseEvent &mouseEvent) = 0;
 
     /**
+     * @brief This function describes what to do when the tool is selected. It is called
+     * by the ToolsManager when the Tool is set as the current tool.
+     */
+    virtual void selected(){};
+
+    /**
      * @brief Returns a copy of the Tool.
      */
     virtual std::shared_ptr<Tool> clone() const = 0;

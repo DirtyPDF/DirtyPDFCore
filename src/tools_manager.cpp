@@ -27,6 +27,7 @@ ToolsManager* ToolsManager::Instance(){
 void ToolsManager::setCurrentTool(const Tool &tool){
   m_oldTool = m_currentTool;
   m_currentTool = tool.clone();
+  m_currentTool->selected();
   emit currentToolChanged(*m_oldTool);
 }
 
