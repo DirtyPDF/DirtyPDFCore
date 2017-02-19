@@ -19,10 +19,11 @@ QList<int> InkAnnotationManipulator::getSections(const QPointF& point, double ra
   QList<int> sections;
   bool inSection;
 
+  QList<QLinkedList<QPointF> > paths = m_annotation->inkPaths();
   QList<QLinkedList<QPointF> >::iterator it1;
   QLinkedList<QPointF>::iterator it2;
   int i=0;
-  for (it1 = m_annotation->inkPaths().begin(); it1 != m_annotation->inkPaths().end(); i++, ++it1){
+  for (it1 = paths.begin(); it1 != paths.end(); i++, ++it1){
     inSection = false;
     if (it1->size() == 1){
       inSection = std::sqrt((it1->front().x() - point.x()) * (it1->front().x() - point.x()) +
