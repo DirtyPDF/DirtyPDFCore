@@ -14,27 +14,21 @@ class TestDocumentsManager : public QObject{
   DocumentsManager* m_manager;
 
   static const int m_docsNum = 3;
-  DocumentId m_docs[m_docsNum];
-  DocumentId m_invalidDoc;
+  Document* m_docs[m_docsNum];
+  Document* m_invalidDoc;
   QUrl m_validDocUrl;
   QUrl m_invalidDocUrl;
 
 private slots:
 
-  void initTestCase();
   void init();
   void cleanup();
   void openDocument();
   void setCurrentDocument();
   void closeDocument();
-  void getOpenedDocuments();
-  void getDocumentById();
+  void openedDocuments();
+  void document();
 };
-
-
-void TestDocumentsManager::initTestCase(){
-  qRegisterMetaType<DocumentId>("DocumentId");
-}
 
 
 void TestDocumentsManager::init(){
@@ -43,10 +37,10 @@ void TestDocumentsManager::init(){
   m_invalidDocUrl = QUrl(TESTFILES "/not_exist.pdf");
   for (int i=0; i < m_docsNum; i++){
     m_docs[i] = m_manager->openDocument(m_validDocUrl);
-    QVERIFY(m_docs[i] != INVALID_DOCUMENT_ID);
+    QVERIFY(m_docs[i] != 0);
   }
   m_invalidDoc = m_manager->openDocument(m_invalidDocUrl);
-  QCOMPARE(m_invalidDoc, INVALID_DOCUMENT_ID);
+  QVERIFY(m_invalidDoc == NULL);
 }
 
 
@@ -56,7 +50,7 @@ void TestDocumentsManager::cleanup(){
 
 
 void TestDocumentsManager::openDocument(){
-  QSignalSpy spy(m_manager, SIGNAL(documentOpened(DocumentId)));
+  QSignalSpy spy(m_manager, SIGNAL(documentOpened(Document*)));
 
   m_manager->openDocument(m_invalidDocUrl);
   QCOMPARE(spy.count(), 0);
@@ -67,50 +61,52 @@ void TestDocumentsManager::openDocument(){
 
 
 void TestDocumentsManager::setCurrentDocument(){
-  QSignalSpy spy(m_manager, SIGNAL(currentDocumentChanged(DocumentId)));
+  QSignalSpy spy(m_manager, SIGNAL(currentDocumentChanged(Document*)));
 
-  QCOMPARE(m_manager->getCurrentDocument(), INVALID_DOCUMENT_ID);
+  QVERIFY(m_manager->currentDocument() == NULL);
   m_manager->setCurrentDocument(m_docs[0]);
   QCOMPARE(spy.count(), 1);
-  QCOMPARE(m_manager->getCurrentDocument(), m_docs[0]);
+  QCOMPARE(m_manager->currentDocument(), m_docs[0]);
   m_manager->closeDocument(m_docs[0]);
-  QCOMPARE(m_manager->getCurrentDocument(), INVALID_DOCUMENT_ID);
+  QVERIFY(m_manager->currentDocument() == NULL);
   m_manager->setCurrentDocument(m_docs[0]);
   QCOMPARE(spy.count(), 1);
-  QCOMPARE(m_manager->getCurrentDocument(), INVALID_DOCUMENT_ID);
+  QVERIFY(m_manager->currentDocument() == NULL);
 }
 
 
 void TestDocumentsManager::closeDocument(){
-  QSignalSpy spy(m_manager, SIGNAL(documentClosed(DocumentId)));
+  QSignalSpy spy(m_manager, SIGNAL(documentClosed(Document*)));
+  bool closed;
 
-  m_manager->closeDocument(m_invalidDoc);
+  closed = m_manager->closeDocument(m_invalidDoc);
+  QCOMPARE(closed, false);
   QCOMPARE(spy.count(), 0);
 
-  m_manager->closeDocument(m_docs[0]);
+  closed = m_manager->closeDocument(m_docs[0]);
+  QCOMPARE(closed, true);
   QCOMPARE(spy.count(), 1);
 }
 
 
-void TestDocumentsManager::getOpenedDocuments(){
-  QList<DocumentId> open_docs = m_manager->getOpenedDocuments();
-  std::sort(open_docs.begin(), open_docs.end());
-  std::sort(m_docs, m_docs + m_docsNum);
+void TestDocumentsManager::openedDocuments(){
+  QList<Document*> open_docs = m_manager->openedDocuments();
 
   for (int i=0; i < m_docsNum; i++){
-    QCOMPARE(open_docs[i], m_docs[i]);
+    QVERIFY(open_docs[i] == m_docs[i]);
   }
 }
 
 
-void TestDocumentsManager::getDocumentById(){
-  Document* doc = m_manager->getDocumentById(m_invalidDoc);
+void TestDocumentsManager::document(){
+  int invalid_index = 4;
+  Document* doc = m_manager->document(invalid_index);
   QVERIFY(doc == NULL);
-  doc = m_manager->getDocumentById(m_docs[0]);
-  QVERIFY(doc != NULL);
+  doc = m_manager->document(0);
+  QVERIFY(doc == m_docs[0]);
   m_manager->closeDocument(m_docs[0]);
-  doc = m_manager->getDocumentById(m_docs[0]);
-  QVERIFY(doc == NULL);
+  doc = m_manager->document(0);
+  QVERIFY(doc == m_docs[1]);
 }
 
 

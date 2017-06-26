@@ -6,7 +6,7 @@
 #ifndef _DPDFC_DOCUMENTS_MANAGER_H_
 #define _DPDFC_DOCUMENTS_MANAGER_H_
 
-#include <QHash>
+#include <QList>
 #include <QUrl>
 #include "document.hpp"
 
@@ -23,15 +23,13 @@ namespace DirtyPDFCore{
     Q_OBJECT
 
   private:
-    QHash<DocumentId, Document*> m_openedDocuments;
-    DocumentId m_currentDocumentId;
+    QList<Document*> m_openedDocuments;
+    Document* m_currentDocument;
     static DocumentsManager* m_instance;
 
     DocumentsManager();
     DocumentsManager(const DocumentsManager &dm);
     void operator=(const DocumentsManager &dm);
-
-    DocumentId generateNewId();
 
   public:
     static DocumentsManager* Instance();
@@ -41,54 +39,58 @@ namespace DirtyPDFCore{
      * @brief Returns the id of the current document. If there is not current document
      * returns INVALID_DOCUMENT_ID
      */
-    DocumentId getCurrentDocument();
+    Document* currentDocument();
 
     /**
-     * @brief Returns a list with the id's of all documents opened.
+     * @brief Returns a list with all documents opened.
+     * The list is sorted by opening order.
      */
-    QList<DocumentId> getOpenedDocuments();
+    QList<Document*> openedDocuments();
 
     /**
-     * @brief Returns a pointer to the Document refered by the id.
-     * @remarks Use pointers to the documents managed by DocumentsManager only
-     * if necesary. The rest of the time is better work with ids.
-     * @warning @b NEVER delete a pointer to a document managed by DocumentsManager
-     * since this will try to delete it again when the document is closed or in its destructor.
-     * @param documentId Id of the document to get.
-     * @return A pointer to the Document refered by documentId. @n
-     * NULL if the id is invalid or the document is not stored in DocumentsManager.
+     * @brief Returns the number of documents opened.
      */
-    Document* getDocumentById(DocumentId documentId);
+    int numDocuments();
 
-    int getDocumentsNumber();
+    /**
+     * @brief Returns the ith document, sorting by opening order.
+     * @warning The index of a document can be updated when other document is closed.
+     * For example let document0, document1 and document2 be three documents with
+     * indexes 0, 1, and 2. If document1 is closed document0 still has the index 0,
+     * but document2 now has the index 1.
+     * To get an updated list of the documents opened call openedDocuments()
+     * @see openedDocuments
+     */
+    Document* document(int index);
 
   public slots:
 
     /**
      * @brief Open the document in the specified path.
      * @param docUrl Path in the filesystem of the document to open.
-     * @return The id of the Document created or INVALID_DOCUMENT_ID if the
+     * @return The Document created or null if the
      * document couldn't be opened.
      */
-    DocumentId openDocument(const QUrl &docUrl);
+    Document* openDocument(const QUrl &filePath);
 
     /**
-     * @brief Close the document with the specified id. Also deletes the Document asociated.
-     * @param documentId Id of the document to close. If the id is not in the DocumentsManager or
-       is invalid nothing happens.
+     * @brief Close the document. Also deletes the Document asociated.
+     * @param document Document to close.
+     * @return false if the document is not stored in the manager, true otherwise.
      */
-    void closeDocument(const DocumentId documentId);
+    bool closeDocument(Document* document);
 
     /**
      * @brief Set a document as the current one.
-     * @param documentId Id of the document to set as current.
+     * @param document Document to set as current.
+     * @return false if the document is not stored in the manager, true otherwise.
      */
-    void setCurrentDocument(const DocumentId documentId);
+    bool setCurrentDocument(Document* document);
 
   signals:
-    void documentOpened(DocumentId documentId);
-    void documentClosed(DocumentId documentId);
-    void currentDocumentChanged(DocumentId oldCurrentDocumentId);
+    void documentOpened(Document* document);
+    void documentClosed(Document* document);
+    void currentDocumentChanged(Document* oldDocument);
   };
 }
 #endif

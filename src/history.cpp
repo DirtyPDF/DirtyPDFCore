@@ -28,28 +28,34 @@ History* History::Instance(){
 }
 
 
-void History::addDocumentStack(DocumentId documentId){
-  if (m_undoStacks.contains(documentId))
-    QUndoGroup::removeStack(m_undoStacks[documentId]);
+void History::addDocumentStack(Document* document){
+  if (m_undoStacks.contains(document))
+    return;
 
   QUndoStack* undoStack = new QUndoStack(this);
-  m_undoStacks[documentId] = undoStack;
+  m_undoStacks[document] = undoStack;
   QUndoGroup::addStack(undoStack);
 }
 
 
-void History::setActiveDocumentStack(DocumentId documentId){
-  QUndoGroup::setActiveStack(m_undoStacks[documentId]);
+void History::setActiveDocumentStack(Document* document){
+  if (!m_undoStacks.contains(document))
+    return;
+
+  QUndoGroup::setActiveStack(m_undoStacks[document]);
 }
 
 
-void History::removeDocumentStack(DocumentId documentId){
-  QUndoGroup::removeStack(m_undoStacks[documentId]);
-  m_undoStacks.remove(documentId);
+void History::removeDocumentStack(Document* document){
+  if (!m_undoStacks.contains(document))
+    return;
+
+  QUndoGroup::removeStack(m_undoStacks[document]);
+  m_undoStacks.remove(document);
 }
 
 
 void History::activeCurrentDocumentStack(){
   DocumentsManager* doc_manager = DocumentsManager::Instance();
-  setActiveDocumentStack(doc_manager->getCurrentDocument());
+  setActiveDocumentStack(doc_manager->currentDocument());
 }
