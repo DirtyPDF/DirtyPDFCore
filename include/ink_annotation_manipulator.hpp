@@ -29,6 +29,11 @@ namespace DirtyPDFCore{
     Poppler::InkAnnotation* m_annotation; ///< Annotation to manipulate
 
     /**
+     * @brief Returns true if the distance of some point of the section lines to center is smaller than radius.
+     */
+    static bool isSectionInside(const QLinkedList<QPointF>& section, const QPointF& center, double radius=0, double (*distance)(const QPointF&, const QPointF&)=Distances::manhattan);
+
+    /**
      * @brief Returns the strokes which have some of them points inside the
      * circumference with point as center and radius as radius.
      * @param point Center of the circumference.
@@ -38,8 +43,13 @@ namespace DirtyPDFCore{
      */
     QList<int> getSections(const QPointF& point, double radius=0);
 
-
   public:
+    /**
+     * @brief Returns true if the distance of some section of the annotation to center is smaller than radius.
+     * @param distance The distance function. It should be a valid metric and can be used to control the shape of the set of points
+       with a distance from center lower or equal than radius.
+     */
+    static bool isInside(const Poppler::InkAnnotation* annotation, const QPointF& center, double radius=0, double (*distance)(const QPointF&, const QPointF&)=Distances::manhattan);
 
     /**
      * @brief Creates an InkAnnotationManipulator attached to an InkAnnotation.

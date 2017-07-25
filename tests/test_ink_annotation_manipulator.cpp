@@ -13,7 +13,7 @@ class TestInkAnnotationManipulator : public QObject{
 
 private:
 
-  // Four straight lines defined by the points:
+  // Four segments defined by the points:
   // (0, 0), (1, 0)
   // (0, 2), (1, 2)
   // (0, 4), (1, 4)
@@ -29,6 +29,7 @@ private slots:
   void applyTransformPart();
   void erase();
   void erasePart();
+  void isInside();
   void move();
   void movePart();
   void rotate();
@@ -257,6 +258,30 @@ void TestInkAnnotationManipulator::scalePart(){
   QCOMPARE(*it, QPointF(0, 12));
   ++it;
   QCOMPARE(*it, QPointF(3, 12));
+}
+
+
+void TestInkAnnotationManipulator::isInside(){
+  QList<QLinkedList<QPointF> > paths;
+  paths.append(QLinkedList<QPointF>());
+  paths[0].append(QPointF(1, 1));
+  Poppler::InkAnnotation* onePointAnn = new Poppler::InkAnnotation;
+  onePointAnn->setInkPaths(paths);
+
+  QCOMPARE(InkAnnotationManipulator::isInside(m_annotation, QPointF(0.5, 0)), true);
+  QCOMPARE(InkAnnotationManipulator::isInside(onePointAnn, QPointF(1, 1)), true);
+
+  // Using manhattan distance
+  QCOMPARE(InkAnnotationManipulator::isInside(m_annotation, QPointF(0.5, 1), 0.5), false);
+  QCOMPARE(InkAnnotationManipulator::isInside(m_annotation, QPointF(0.5, 1), 1), true);
+  QCOMPARE(InkAnnotationManipulator::isInside(m_annotation, QPointF(0.5, 1), 1.5), true);
+  QCOMPARE(InkAnnotationManipulator::isInside(onePointAnn, QPointF(0, 0), 2), true);
+
+  // Using euclidean distance
+  QCOMPARE(InkAnnotationManipulator::isInside(m_annotation, QPointF(0.5, 1), 0.5, Distances::euclidean), false);
+  QCOMPARE(InkAnnotationManipulator::isInside(m_annotation, QPointF(0.5, 1), 1, Distances::euclidean), true);
+  QCOMPARE(InkAnnotationManipulator::isInside(m_annotation, QPointF(0.5, 1), 1.5, Distances::euclidean), true);
+  QCOMPARE(InkAnnotationManipulator::isInside(onePointAnn, QPointF(0, 0), 2, Distances::euclidean), true);
 }
 
 

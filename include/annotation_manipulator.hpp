@@ -11,6 +11,7 @@
 #include <QPointF>
 #include <QVector2D>
 #include <poppler-qt5.h>
+#include "distances.hpp"
 
 
 

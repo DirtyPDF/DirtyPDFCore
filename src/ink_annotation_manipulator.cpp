@@ -10,6 +10,38 @@ AnnotationManipulator* DirtyPDFCore::createAnnotationManipulator(Poppler::InkAnn
 }
 
 
+bool InkAnnotationManipulator::isInside(const Poppler::InkAnnotation* annotation, const QPointF& center, double radius, double (*distance)(const QPointF&, const QPointF&)){
+  QList<QLinkedList<QPointF> > paths = annotation->inkPaths();
+  bool inside = false;
+
+  for (QList<QLinkedList<QPointF> >::iterator it = paths.begin(); it != paths.end() && !inside; ++it){
+    inside = isSectionInside(*it, center, radius, distance);
+  }
+
+  return inside;
+}
+
+
+bool InkAnnotationManipulator::isSectionInside(const QLinkedList<QPointF>& section, const QPointF& center, double radius, double (*distance)(const QPointF&, const QPointF&)){
+  if (section.empty()) return false;
+  bool inside = false;
+  QLinkedList<QPointF>::const_iterator it = section.begin();
+  QPointF point1 = *it;
+  QPointF point2;
+
+  inside = distance(center, point1) <= radius;
+  ++it;
+  while (it != section.end() && !inside){
+    point2 = *it;
+    inside = distancePointToSegment(center, point1, point2, distance) <= radius;
+    point1 = point2;
+    ++it;
+  }
+
+  return inside;
+}
+
+
 InkAnnotationManipulator::InkAnnotationManipulator(Poppler::InkAnnotation* annotation){
   m_annotation = annotation;
 }
