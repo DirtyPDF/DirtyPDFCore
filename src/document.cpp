@@ -71,7 +71,7 @@ int Document::numPages(){
 
 
 Page* Document::page(int index){
-  return m_document->page(index);
+  return new Page(m_document->page(index));
 }
 
 
